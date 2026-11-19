@@ -1,4 +1,4 @@
-﻿from openai import OpenAI
+﻿from openai import OpenAI, Auth
 import streamlit as st
 
 with st.sidebar:
@@ -24,7 +24,11 @@ if prompt := st.chat_input():
                     default_headers={"api-key": hkust_api_key})
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
-    response = client.chat.completions.create(model="gpt-5.6-sol", messages=st.session_state.messages)
+    try:
+        response = client.chat.completions.create(model="gpt-5.6-sol", messages=st.session_state.messages)
+    except AuthenticationError:
+        st.error("Invalid API key. Please check your HKUST GenAI API key.")
+        st.stop()
     msg = response.choices[0].message.content
     st.session_state.messages.append({"role": "assistant", "content": msg})
     st.chat_message("assistant").write(msg)
