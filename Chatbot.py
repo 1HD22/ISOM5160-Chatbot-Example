@@ -1,4 +1,4 @@
-﻿from openai import OpenAI, Auth
+﻿from openai import OpenAI, AuthenticationError
 import streamlit as st
 
 with st.sidebar:
